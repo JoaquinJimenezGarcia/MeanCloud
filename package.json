@@ -10,7 +10,9 @@
   "author": "Joaquin Jimenez Garcia",
   "license": "MIT",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.0",
+    "crypto": "^1.0.1",
     "express": "^4.15.4",
     "mongoose": "^4.11.11"
   },
