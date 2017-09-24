@@ -11,7 +11,7 @@ api.post('/document', documentController.saveDocument)
 api.put('/document/:documentId', documentController.updateDocument)
 api.delete('/document/:documentId', documentController.deleteDocument)
 
-api.get('/private', auth.isAuth, (req, res) => {
+api.get('/private', auth, (req, res) => {
   res.status(200).send({message:'Tienes acceso'})
 })
 
