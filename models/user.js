@@ -9,12 +9,28 @@ const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   displayName: String,
   avatar: String,
-  password: { type: String, select: false },
+  password: { type: String, select: true },
   signupDate: { type: Date, default: Date.now() },
   lastLogin: Date
 })
 
 UserSchema.pre('save', (next) => {
+  let user = this;
+
+  bcrypt.genSalt(10, (err, salt) => {
+    if(err) return next(err)
+
+    bcrypt.hash(user.password, salt, null, (err, hash) =>{
+      if (err) return next(err)
+
+      user.password = hash
+      next();
+    })
+  })
+})
+
+// Not working anymore since isModified is no longer a function
+/*UserSchema.pre('save', (next) => {
   let user = this
 
   if (!user.isModified('password')) {
@@ -35,7 +51,14 @@ UserSchema.pre('save', (next) => {
       }
     })
   }
-})
+})*/
+
+UserSchema.methods.comparePassword = function(candidatePassword, callback) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return callback(err)
+        callback(null, isMatch)
+    })
+}
 
 UserSchema.methods.gravatar = function () {
   if (!this.email) {
